@@ -55,6 +55,30 @@ describe('Arika Validation', () => {
         assert.ok(errors.score);
     });
 
+    it('validates string rule', async () => {
+        const data = { name: 'Arika', age: 25 };
+        const rules = { name: 'string', age: 'string' };
+        const validator = new Validator(data, rules);
+
+        assert.strictEqual(await validator.fails(), true);
+        const errors = validator.errors();
+        assert.ok(errors.age);
+        assert.strictEqual(errors.age[0], 'The age must be a string.');
+        assert.ok(!errors.name);
+    });
+
+    it('validates number rule', async () => {
+        const data = { age: 25, name: 'Arika' };
+        const rules = { age: 'number', name: 'number' };
+        const validator = new Validator(data, rules);
+
+        assert.strictEqual(await validator.fails(), true);
+        const errors = validator.errors();
+        assert.ok(errors.name);
+        assert.strictEqual(errors.name[0], 'The name must be a number.');
+        assert.ok(!errors.age);
+    });
+
     it('supports custom rule classes', async () => {
         class Uppercase implements Rule {
             validate(value: any): boolean {

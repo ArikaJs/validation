@@ -6,3 +6,5 @@ export * from './Rules/Required';
 export * from './Rules/Email';
 export * from './Rules/Min';
 export * from './Rules/Max';
+export * from './Rules/String';
+export * from './Rules/Number';

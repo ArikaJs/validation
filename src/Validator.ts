@@ -4,6 +4,8 @@ import { Required } from './Rules/Required';
 import { Email } from './Rules/Email';
 import { Min } from './Rules/Min';
 import { Max } from './Rules/Max';
+import { IsString } from './Rules/String';
+import { IsNumber } from './Rules/Number';
 
 export class Validator {
     private data: Record<string, any>;
@@ -25,6 +27,8 @@ export class Validator {
         // Register default rules
         this.customRules.set('required', new Required());
         this.customRules.set('email', new Email());
+        this.customRules.set('string', new IsString());
+        this.customRules.set('number', new IsNumber());
     }
 
     /**
