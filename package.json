@@ -9,7 +9,7 @@
         "build": "tsc -p tsconfig.json",
         "build:tests": "tsc -p tsconfig.test.json",
         "clean": "rm -rf dist",
-        "prepare": "npm run build",
+        "prepare": "echo skip",
         "test": "npm run build && npm run build:tests && node scripts/fix-test-imports.js && node --test 'dist/tests/**/*.test.js'",
         "test:watch": "npm run build && npm run build:tests && node --test --watch 'dist/tests/**/*.test.js'"
     },
