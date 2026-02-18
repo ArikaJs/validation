@@ -1,6 +1,6 @@
 {
     "name": "@arikajs/validation",
-    "version": "0.1.0",
+    "version": "0.1.4",
     "description": "Powerful, expressive validation system for the ArikaJS framework.",
     "license": "MIT",
     "main": "dist/index.js",
@@ -10,7 +10,7 @@
         "build:tests": "tsc -p tsconfig.test.json",
         "clean": "rm -rf dist",
         "prepare": "echo skip",
-        "test": "npm run build && npm run build:tests && node scripts/fix-test-imports.js && node --test 'dist/tests/**/*.test.js'",
+        "test": "npm run build && npm run build:tests && node --test 'dist/tests/**/*.test.js'",
         "test:watch": "npm run build && npm run build:tests && node --test --watch 'dist/tests/**/*.test.js'"
     },
     "files": [

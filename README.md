@@ -113,11 +113,22 @@ password: 'required|min:8|max:32'
 | Rule | Description |
 | :--- | :--- |
 | `required` | Field must be present and not empty |
+| `nullable` | Field can be null or empty |
+| `bail` | Stop validation after first failure for a field |
 | `email` | Must be a valid email address |
 | `min:value` | Minimum length (string) or value (number) |
 | `max:value` | Maximum length (string) or value (number) |
 | `string` | Must be a string |
 | `number` | Must be numeric |
+| `required_if:field,value` | Required if another field matches a value |
+
+### 🚀 Advanced Features
+
+- **Nested Object Validation**: Use dot notation to validate deep structures (`user.email`).
+- **Array Wildcard Validation**: Use `*` to validate all elements in an array (`users.*.email`).
+- **Bail Validation**: Stop executing rules for a field after the first failure.
+- **Validated Data**: Use `validator.validated()` to get only the data that passed validation.
+- **Conditional Rules**: Rules that only run based on the values of other fields.
 
 ---
 
