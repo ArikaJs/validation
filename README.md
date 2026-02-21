@@ -121,6 +121,14 @@ password: 'required|min:8|max:32'
 | `string` | Must be a string |
 | `number` | Must be numeric |
 | `required_if:field,value` | Required if another field matches a value |
+| `in:foo,bar` | The field under validation must be included in the given list of values |
+| `not_in:foo,bar` | The field under validation must not be included in the given list of values |
+| `alpha` | The field under validation must be entirely alphabetic characters |
+| `alpha_num` | The field under validation must be entirely alpha-numeric characters |
+| `url` | Must be a valid URL |
+| `boolean` | Must be a boolean (e.g., `true`, `false`, `1`, `0`) |
+| `array` | Must be a JavaScript array |
+| `confirmed` | The field must have a matching field of `_confirmation` (e.g. `password` needs `password_confirmation`) |
 
 ### 🚀 Advanced Features
 
@@ -181,6 +189,17 @@ if (validator.fails()) {
   "email": ["The email field is required."],
   "password": ["The password must be at least 8 characters."]
 }
+```
+
+### Customizing Error Messages
+
+You can pass an object of custom messages as the third argument to the `Validator` constructor. You can override globally for a rule or target specific fields.
+
+```ts
+const validator = new Validator(data, rules, {
+    'required': 'Hold up, you forgot the :attribute field!',
+    'email.email': 'Dude, that is not a real email address!'
+});
 ```
 
 ---

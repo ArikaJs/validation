@@ -7,6 +7,14 @@ import { Max } from './Rules/Max';
 import { IsString } from './Rules/String';
 import { IsNumber } from './Rules/Number';
 import { RequiredIf } from './Rules/RequiredIf';
+import { In } from './Rules/In';
+import { NotIn } from './Rules/NotIn';
+import { Alpha } from './Rules/Alpha';
+import { AlphaNum } from './Rules/AlphaNum';
+import { Url } from './Rules/Url';
+import { IsBoolean } from './Rules/Boolean';
+import { IsArray } from './Rules/IsArray';
+import { Confirmed } from './Rules/Confirmed';
 
 export class Validator {
     private data: Record<string, any>;
@@ -31,6 +39,11 @@ export class Validator {
         this.customRules.set('email', new Email());
         this.customRules.set('string', new IsString());
         this.customRules.set('number', new IsNumber());
+        this.customRules.set('alpha', new Alpha());
+        this.customRules.set('alpha_num', new AlphaNum());
+        this.customRules.set('url', new Url());
+        this.customRules.set('boolean', new IsBoolean());
+        this.customRules.set('array', new IsArray());
     }
 
     /**
@@ -56,9 +69,10 @@ export class Validator {
             }
 
             let failed = false;
-            for (const rule of ruleSet) {
+            for (const item of ruleSet) {
+                const { rule, name: ruleName } = item;
                 // Skip pseudo-rules
-                if ((rule as any).name === 'nullable' || (rule as any).name === 'bail') {
+                if (ruleName === 'nullable' || ruleName === 'bail') {
                     continue;
                 }
 
@@ -70,7 +84,8 @@ export class Validator {
                 const passes = await rule.validate(value, attribute);
 
                 if (!passes) {
-                    const message = this.formatMessage(rule.message(), attribute);
+                    const defaultMessage = rule.message();
+                    const message = this.formatMessage(defaultMessage, attribute, ruleName);
                     this.errorBag.add(attribute, message);
                     failed = true;
 
@@ -111,7 +126,7 @@ export class Validator {
         this.customRules.set(name, rule);
     }
 
-    private parseRules(rules: string | Rule | (string | Rule)[]): Rule[] {
+    private parseRules(rules: string | Rule | (string | Rule)[]): { rule: Rule; name: string }[] {
         let parsed: (string | Rule)[];
 
         if (typeof rules === 'string') {
@@ -126,38 +141,53 @@ export class Validator {
             if (typeof r === 'string') {
                 return r.split('|').map(sub => this.createRuleFromString(sub));
             }
-            return r;
+            return { rule: r, name: r.constructor.name.toLowerCase() };
         });
     }
 
-    private createRuleFromString(ruleString: string): Rule {
+    private createRuleFromString(ruleString: string): { rule: Rule; name: string } {
         const [fullRule, ...rest] = ruleString.split(':');
         const name = fullRule.trim();
         const params = rest.length > 0 ? rest.join(':') : '';
         const parameters = params ? params.split(',') : [];
 
+        let rule: Rule;
+
         switch (name) {
             case 'min':
-                return new Min(Number(parameters[0]));
+                rule = new Min(Number(parameters[0]));
+                break;
             case 'max':
-                return new Max(Number(parameters[0]));
+                rule = new Max(Number(parameters[0]));
+                break;
+            case 'in':
+                rule = new In(parameters);
+                break;
+            case 'not_in':
+                rule = new NotIn(parameters);
+                break;
+            case 'confirmed':
+                rule = new Confirmed(this.data);
+                break;
             case 'required_if':
-                return new RequiredIf(parameters[0], parameters[1], this.data);
+                rule = new RequiredIf(parameters[0], parameters[1], this.data);
+                break;
             case 'nullable':
             case 'bail':
-                // Return a dummy rule that we'll handle in the main loop
-                return {
-                    name,
+                rule = {
                     validate: async () => true,
                     message: () => ''
                 } as any;
+                break;
             default:
-                const rule = this.customRules.get(name);
-                if (!rule) {
+                const registered = this.customRules.get(name);
+                if (!registered) {
                     throw new Error(`Validation rule '${name}' not found.`);
                 }
-                return rule;
+                rule = registered;
         }
+
+        return { rule, name };
     }
 
     private getValue(key: string): any {
@@ -183,8 +213,21 @@ export class Validator {
         return value === null || value === undefined || value === '';
     }
 
-    private formatMessage(message: string, attribute: string): string {
-        return message.replace(':attribute', attribute);
+    private formatMessage(defaultMessage: string, attribute: string, ruleName: string): string {
+        // Look for exact attribute.rule custom message
+        let template = this.messages[`${attribute}.${ruleName}`];
+
+        // Look for general rule custom message
+        if (!template) {
+            template = this.messages[ruleName];
+        }
+
+        // Fallback to default message
+        if (!template) {
+            template = defaultMessage;
+        }
+
+        return template.replace(/:attribute/g, attribute);
     }
 
     private expandRules(rules: Record<string, any>): Record<string, any> {
