@@ -288,3 +288,36 @@ class UniqueEmail {
 ## 🧠 Philosophy
 
 > “Validation is not restriction — it is protection.”
+
+## 🏗 Architecture
+
+```text
+validation/
+├── src/
+│   ├── Rules
+│   │   ├── Alpha.ts
+│   │   ├── AlphaNum.ts
+│   │   ├── Boolean.ts
+│   │   ├── Confirmed.ts
+│   │   ├── Email.ts
+│   │   ├── In.ts
+│   │   ├── IsArray.ts
+│   │   ├── Max.ts
+│   │   ├── Min.ts
+│   │   ├── NotIn.ts
+│   │   ├── Number.ts
+│   │   ├── Required.ts
+│   │   ├── RequiredIf.ts
+│   │   ├── String.ts
+│   │   └── Url.ts
+│   ├── ErrorBag.ts
+│   ├── index.ts
+│   ├── Rule.ts
+│   ├── ValidationError.ts
+│   └── Validator.ts
+├── tests/
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
