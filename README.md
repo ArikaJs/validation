@@ -253,42 +253,6 @@ class UniqueEmail {
 
 ---
 
-## 🧱 Project Structure
-
-- `src/`
-  - `Validator.ts` – Main validation engine
-  - `Rule.ts` – Rule interface
-  - `Rules/` – Built-in rules
-    - `Required.ts`, `Email.ts`, `Min.ts`, `Max.ts`
-  - `ErrorBag.ts` – Error collection
-  - `ValidationError.ts` – Error exception
-  - `index.ts` – Public exports
-- `tests/` – Unit tests
-- `package.json`
-- `tsconfig.json`
-- `README.md`
-- `LICENSE`
-
----
-
-## Versioning & Stability
-
-- Current version: **v0.x** (experimental)
-- API may change until **v1.0**
-- Will follow semantic versioning after stabilization
-
----
-
-## 📜 License
-
-`@arikajs/validation` is open-sourced software licensed under the **MIT License**.
-
----
-
-## 🧠 Philosophy
-
-> “Validation is not restriction — it is protection.”
-
 ## 🏗 Architecture
 
 ```text
@@ -320,4 +284,24 @@ validation/
 ├── tsconfig.json
 └── README.md
 ```
+
+---
+
+## Versioning & Stability
+
+- Current version: **v0.x** (experimental)
+- API may change until **v1.0**
+- Will follow semantic versioning after stabilization
+
+---
+
+## 📜 License
+
+`@arikajs/validation` is open-sourced software licensed under the **MIT License**.
+
+---
+
+## 🧠 Philosophy
+
+> “Validation is not restriction — it is protection.”
 
